@@ -1,0 +1,49 @@
+import { DataTypes, Model } from "sequelize";
+import db from "../database/db.js";
+import Usuario from "./Usuario";
+
+class Partida extends Model {}
+
+Partida.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    id_jugador1: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "usuarios",
+        key: "id",
+      },
+    },
+    id_jugador2: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "usuarios",
+        key: "id",
+      },
+    },
+    estado: {
+      type: DataTypes.TINYINT, //0 jugando, 1 terminada
+    },
+    puntuacion_j1: {
+      type: DataTypes.TINYINT,
+    },
+    puntuacion_j2: {
+      type: DataTypes.TINYINT,
+    },
+  },
+  {
+    sequelize: db,
+    modelName: "Partida",
+    tableName: "partidas",
+    timestamps: true,
+  }
+);
+
+Partida.belongsTo(Usuario, { foreignKey: "id_jugador1", as: "jugador1" });
+Partida.belongsTo(Usuario, { foreignKey: "id_jugador2", as: "jugador2" });
+
+export default Partida;

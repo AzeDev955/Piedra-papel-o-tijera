@@ -1,0 +1,50 @@
+import { DataTypes, Model } from "sequelize";
+import db from "../database/db.js";
+import Partida from "./Partida";
+
+class Usuario extends Model {}
+
+Usuario.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nickname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    id_rol: {
+      type: DataTypes.TINYINT,
+      defaultValue: 2,
+    },
+  },
+  {
+    sequelize: db,
+    modelName: "Usuario",
+    tableName: "usuarios",
+    timestamps: true,
+  }
+);
+
+Usuario.hasMany(Partida, {
+  foreignKey: "id_jugador1",
+  as: "partidasJ1",
+});
+
+Usuario.hasMany(Partida, {
+  foreignKey: "id_jugador2",
+  as: "partidasJ2",
+});
+export default Usuario;
