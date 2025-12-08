@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import db from "../database/db.js";
-import Usuario from "./Usuario";
+import Usuario from "./Usuario.js";
 
 class Partida extends Model {}
 
@@ -26,7 +26,7 @@ Partida.init(
       },
     },
     estado: {
-      type: DataTypes.TINYINT, //0 jugando, 1 terminada
+      type: DataTypes.TINYINT, //0 esperando, 1 jugando, 2 terminada
     },
     puntuacion_j1: {
       type: DataTypes.TINYINT,
@@ -42,8 +42,5 @@ Partida.init(
     timestamps: true,
   }
 );
-
-Partida.belongsTo(Usuario, { foreignKey: "id_jugador1", as: "jugador1" });
-Partida.belongsTo(Usuario, { foreignKey: "id_jugador2", as: "jugador2" });
 
 export default Partida;

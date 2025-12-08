@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import db from "../database/db.js";
-import Partida from "./Partida";
+import Partida from "./Partida.js";
 
 class Usuario extends Model {}
 
@@ -38,13 +38,4 @@ Usuario.init(
   }
 );
 
-Usuario.hasMany(Partida, {
-  foreignKey: "id_jugador1",
-  as: "partidasJ1",
-});
-
-Usuario.hasMany(Partida, {
-  foreignKey: "id_jugador2",
-  as: "partidasJ2",
-});
 export default Usuario;

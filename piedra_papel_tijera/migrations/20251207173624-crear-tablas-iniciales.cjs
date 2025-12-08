@@ -44,6 +44,44 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
+    await queryInterface.createTable("partidas", {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      id_jugador1: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "usuarios",
+          key: "id",
+        },
+      },
+      id_jugador2: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "usuarios",
+          key: "id",
+        },
+      },
+      estado: {
+        type: Sequelize.TINYINT, //0 jugando, 1 terminada
+      },
+      puntuacion_j1: {
+        type: Sequelize.TINYINT,
+      },
+      puntuacion_j2: {
+        type: Sequelize.TINYINT,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+    });
   },
 
   async down(queryInterface, Sequelize) {
