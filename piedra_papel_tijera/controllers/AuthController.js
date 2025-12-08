@@ -33,4 +33,29 @@ const login = async (req, res) => {
   }
 };
 
-export { login };
+const register = async (req, res) => {
+  try {
+    const { nickname, email, password } = req.body;
+    const usuario = await Usuario.findOne({
+      where: {
+        [Op.or]: [{ email: email }, { nickname: nickname }],
+      },
+    });
+
+    if (usuario) {
+      return res.status(400).json({ error: "Ya estas registrado" });
+    }
+
+    const nuevoUsuario = await Usuario.create({
+      nickname,
+      email,
+      password,
+    });
+    res.status(201).json({ message: "Usuario creado", usuario: nuevoUsuario });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Algo ha salido mal" });
+  }
+};
+
+export { login, register };

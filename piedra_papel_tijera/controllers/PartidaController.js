@@ -1,4 +1,5 @@
 import Partida from "../models/Partida.js";
+import Turno from "../models/Turno.js";
 
 const crearPartida = async (req, res) => {
   try {
@@ -46,4 +47,85 @@ const getAllPartidas = async (req, res) => {
   }
 };
 
-export { crearPartida, unirsePartida, getAllPartidas };
+const jugarTurno = async (req, res) => {
+  const { id_partida } = req.params;
+  const { mano } = req.body;
+  const id_usuario = req.user.id;
+  try {
+    const partida = await Partida.findByPk(id_partida);
+    if (!partida)
+      return res.status(404).json({ error: "Partida no encontrada" });
+    if (partida.estado !== 1)
+      return res.status(400).json({ error: "Partida no activa" });
+
+    let turno = await Turno.findOne({
+      where: { id_partida },
+      order: [["createdAt", "DESC"]], // Cogemos el último
+    });
+
+    if (!turno || turno.ganador_turno !== null) {
+      if (!turno || (turno.mano_j1 && turno.mano_j2)) {
+        turno = await Turno.create({ id_partida });
+      }
+    }
+
+    let soyJugador1 = false;
+
+    if (partida.id_jugador1 === id_usuario) {
+      soyJugador1 = true;
+      if (turno.mano_j1)
+        return res
+          .status(400)
+          .json({ error: "Ya jugaste este turno, espera al rival" });
+      turno.mano_j1 = mano;
+    } else if (partida.id_jugador2 === id_usuario) {
+      soyJugador1 = false;
+      if (turno.mano_j2)
+        return res
+          .status(400)
+          .json({ error: "Ya jugaste este turno, espera al rival" });
+      turno.mano_j2 = mano;
+    } else {
+      return res.status(403).json({ error: "No participas en esta partida" });
+    }
+
+    await turno.save();
+    if (turno.mano_j1 && turno.mano_j2) {
+      const m1 = turno.mano_j1;
+      const m2 = turno.mano_j2;
+      let ganadorId = null;
+
+      if (m1 === m2) {
+        ganadorId = null;
+      } else if (
+        (m1 === "piedra" && m2 === "tijera") ||
+        (m1 === "papel" && m2 === "piedra") ||
+        (m1 === "tijera" && m2 === "papel")
+      ) {
+        partida.puntuacion_j1 += 1;
+        ganadorId = partida.id_jugador1;
+      } else {
+        partida.puntuacion_j2 += 1;
+        ganadorId = partida.id_jugador2;
+      }
+
+      turno.ganador_turno = ganadorId;
+      await turno.save();
+      await partida.save();
+
+      return res.json({
+        message: "Turno resuelto",
+        resultado: ganadorId ? `Ganó el jugador ${ganadorId}` : "Empate",
+        jugada_rival: soyJugador1 ? turno.mano_j2 : turno.mano_j1,
+        marcador: { j1: partida.puntuacion_j1, j2: partida.puntuacion_j2 },
+      });
+    }
+
+    res.json({ message: "Jugada guardada. Esperando al rival..." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "algo ha ido mal" });
+  }
+};
+
+export { crearPartida, unirsePartida, getAllPartidas, jugarTurno };
