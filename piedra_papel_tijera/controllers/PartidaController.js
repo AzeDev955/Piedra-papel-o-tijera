@@ -2,7 +2,7 @@ import Partida from "../models/Partida.js";
 
 const crearPartida = async (req, res) => {
   try {
-    const { id_jugador1 } = req.body;
+    const id_jugador1 = req.user.id;
     const nuevaPartida = await Partida.create({
       id_jugador1: id_jugador1,
       estado: 0,
@@ -16,7 +16,7 @@ const crearPartida = async (req, res) => {
 
 const unirsePartida = async (req, res) => {
   try {
-    const { id_jugador2 } = req.body;
+    const id_jugador2 = req.user.id;
     const { id_partida } = req.params;
     const partida = await Partida.findByPk(id_partida);
     if (!partida) {

@@ -84,8 +84,8 @@
 
           if (respuesta.ok) {
             // 3. ¡ÉXITO! Guardamos el token
-            localStorage.setItem("jwt_token", datos.token);
-            localStorage.setItem("user_info", JSON.stringify(datos.usuario));
+            sessionStorage.setItem("jwt_token", datos.token);
+            sessionStorage.setItem("user_info", JSON.stringify(datos.usuario));
 
             mensajeDiv.style.color = "lightgreen";
             mensajeDiv.innerText = "¡Login Correcto! Token guardado.";
