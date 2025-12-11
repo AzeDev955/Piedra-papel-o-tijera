@@ -4,11 +4,11 @@ import express from "express";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import db from "../database/db.js";
-import usuarioRoutes from "../routes/usuarioRoutes.js";
-import partidaRoutes from "../routes/partidaRoutes.js";
-import authRoutes from "../routes/authRoutes.js";
-import { socketController } from "../controllers/SocketController.js";
+import db from "./database/db.js";
+import usuarioRoutes from "./routes/usuarioRoutes.js";
+import partidaRoutes from "./routes/partidaRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import { socketController } from "./controllers/SocketController.js";
 dotenv.config();
 class MiServer {
   constructor() {

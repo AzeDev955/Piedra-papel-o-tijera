@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lobby - Piedra Papel Tijera</title>
+    <style>
+      /* --- ESTILOS GENERALES (Mismo tema que el Login) --- */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #2c3e50; /* Fondo oscuro */
+        color: #ecf0f1;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 800px;
+        background-color: #34495e;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      /* --- CABECERA --- */
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.8rem;
+      }
+
+      .user-panel {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .username {
+        font-weight: bold;
+        color: #3498db;
+      }
+
+      /* --- BOTONES --- */
+      button {
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: transform 0.1s, opacity 0.2s;
+      }
+      button:active {
+        transform: scale(0.98);
+      }
+
+      .btn-logout {
+        background-color: #e74c3c;
+        color: white;
+      }
+      .btn-create {
+        background-color: #27ae60;
+        color: white;
+        width: 100%;
+        padding: 15px;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+      }
+      .btn-join {
+        background-color: #3498db;
+        color: white;
+      }
+      .btn-full {
+        background-color: #7f8c8d;
+        color: white;
+        cursor: not-allowed;
+      }
+
+      /* --- LISTA DE PARTIDAS --- */
+      .games-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+      }
+
+      /* Tarjeta individual de partida */
+      .game-card {
+        background-color: #ecf0f1;
+        color: #2c3e50;
+        padding: 15px;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 120px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+
+      .status {
+        font-size: 0.9em;
+        margin: 10px 0;
+        padding: 5px;
+        border-radius: 4px;
+        text-align: center;
+      }
+
+      .status-waiting {
+        background-color: #e1f7d5;
+        color: #27ae60;
+      }
+      .status-playing {
+        background-color: #fadbd8;
+        color: #c0392b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Sala de Juegos</h1>
+        <div class="user-panel">
+          <span id="welcomeMsg"
+            >Hola, <span class="username">Cargando...</span></span
+          >
+          <button id="btnLogout" class="btn-logout">Salir</button>
+        </div>
+      </header>
+
+      <button id="btnCrearPartida" class="btn-create">
+        + Crear Nueva Partida
+      </button>
+
+      <h3>Partidas Disponibles</h3>
+      <div id="listaPartidas" class="games-list">
+        <div class="game-card">
+          <div class="card-header">
+            <span>Partida #42</span>
+          </div>
+          <div class="status status-waiting">🟢Esperando Rival</div>
+          <button class="btn-join">Unirse</button>
+        </div>
+
+        <div class="game-card">
+          <div class="card-header">
+            <span>Partida #43</span>
+          </div>
+          <div class="status status-playing">🔴Jugando</div>
+          <button class="btn-full" disabled>Completa</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="lobby.js"></script>
+  </body>
+</html>
