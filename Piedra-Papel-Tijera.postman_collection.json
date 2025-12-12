@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "25d09524-4b33-43eb-a7a3-32da73f8c2d3",
+		"name": "Piedra-Papel-Tijera",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48599439"
+	},
+	"item": [
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Crear usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/usuarios/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"usuarios",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Usuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/usuarios/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"usuarios",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"identificador\": \"Jugador1@test.com\",\r\n    \"password\": \"testpass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Partida",
+			"item": [
+				{
+					"name": "Crear Partida(sin token)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_jugador1\": 4 //cambiar con tu usuario\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/partidas/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"partidas",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Partida(con token)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmlja25hbWUiOiJKdWdhZG9yMSIsImlhdCI6MTc2NTIwNjgyNywiZXhwIjoxNzY1MjQyODI3fQ.NStMLp9h0a9LBJQmTvwgelgpPQllTaziHfP79vdQyx0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/partidas/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"partidas",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unirse(sin token)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_jugador2\": 5 // igual que en crear\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/partidas/unirse/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"partidas",
+								"unirse",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unirse(con token)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwibmlja25hbWUiOiJKdWdhZG9yMiIsImlhdCI6MTc2NTIwNzY2NiwiZXhwIjoxNzY1MjQzNjY2fQ.Xb1DgLupqXgkmuvKr3qSuyuuITUTzFIejI440cZFwuY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/partidas/unirse/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"partidas",
+								"unirse",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all partidas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_jugador1\": 4\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/partidas/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"partidas",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Jugar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmlja25hbWUiOiJKdWdhZG9yMSIsImlhdCI6MTc2NTIyNjc4NSwiZXhwIjoxNzY1MjYyNzg1fQ.aIpyS-Q35y_btqun4ZVNhRfmKyErh9n-ZdJzOp61LPc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mano\": \"papel\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/partidas/4/jugar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"partidas",
+								"4",
+								"jugar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
