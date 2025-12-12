@@ -112,6 +112,18 @@ const jugarTurno = async (req, res) => {
         ganadorId = partida.id_jugador2;
       }
 
+      let partidaTerminada = false;
+      let ganadorPartida = null;
+      if (partida.puntuacion_j1 >= 3 || partida.puntuacion_j2 >= 3) {
+        partida.estado = 2;
+        partidaTerminada = true;
+        if (partida.puntuacion_j1 > partida.puntuacion_j2) {
+          ganadorPartida = partida.id_jugador1;
+        } else {
+          ganadorPartida = partida.id_jugador2;
+        }
+      }
+
       turno.ganador_turno = ganadorId;
       await turno.save();
       await partida.save();
@@ -120,6 +132,8 @@ const jugarTurno = async (req, res) => {
         resultado: ganadorId ? `Ganó el jugador ${ganadorId}` : "Empate",
         manos: { j1: m1, j2: m2 },
         marcador: { j1: partida.puntuacion_j1, j2: partida.puntuacion_j2 },
+        partidaTerminada: partidaTerminada,
+        ganadorPartida: ganadorPartida,
       });
 
       return res.json({

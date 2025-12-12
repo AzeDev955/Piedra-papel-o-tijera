@@ -34,6 +34,8 @@ btnCrearPartida.addEventListener("click", async () => {
     } else {
       const nuevaPartida = await response.json();
       socket.emit("cliente:nueva_partida", nuevaPartida);
+      sessionStorage.setItem("partida_id", nuevaPartida.id);
+      window.location.href = "/juego.html";
     }
   } catch (error) {
     console.error(error);
@@ -72,10 +74,23 @@ const pintarPartida = (partida) => {
 
   const btnJoin = document.getElementById(`btn-join-${partida.id}`);
   if (btnJoin) {
-    btnJoin.addEventListener("click", () => {
+    btnJoin.addEventListener("click", async () => {
       console.log("Unirse a partida:", partida.id);
-      sessionStorage.setItem("partida_id", partida.id);
-      window.location.href = "/juego.html";
+      try {
+        const response = await fetch(
+          construirApi(`/partidas/unirse/${partida.id}`),
+          crearHeader("PUT", token)
+        );
+        if (response.ok) {
+          sessionStorage.setItem("partida_id", partida.id);
+          window.location.href = "/juego.html";
+        } else {
+          console.error("Error al unirse");
+        }
+        window.location.href = "/juego.html";
+      } catch (error) {
+        console.error(error);
+      }
     });
   }
 };

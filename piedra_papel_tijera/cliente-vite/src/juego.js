@@ -4,11 +4,10 @@ import { crearHeader, construirApi } from "./helper/helper.js";
 const socket = io("http://localhost:8000");
 const token = sessionStorage.getItem("token");
 const usuario = JSON.parse(sessionStorage.getItem("usuario"));
-const partida_id = sessionStorage.getItem("partida_id");
 
 //const params = new URLSearchParams(window.location.search); de la IA, yo voy a hacerlo de otra manera
 //const idPartida = params.get("id");
-
+const partida_id = sessionStorage.getItem("partida_id"); //Asi
 if (!token) {
   window.location.href = "/login.html";
 }
@@ -41,7 +40,7 @@ socket.on("jugada_realizada", (data) => {
 socket.on("turno_resuelto", (data) => {
   console.log("Evento recibido: turno_resuelto", data);
 
-  const { resultado, marcador, manos } = data;
+  const { resultado, marcador, manos, partidaTerminada, ganadorPartida } = data;
 
   puntosJ1.innerText = marcador.j1;
   puntosJ2.innerText = marcador.j2;
@@ -51,6 +50,17 @@ socket.on("turno_resuelto", (data) => {
 
   estadoDiv.innerText = mensajeFinal;
   estadoDiv.style.background = "#27ae60";
+
+  if (partidaTerminada) {
+    estadoDiv.innerText += `\n🏆 ¡PARTIDA TERMINADA! Ganador: ${ganadorPartida}`;
+    estadoDiv.style.background = "#8e44ad";
+
+    cartas.forEach((c) => {
+      c.style.pointerEvents = "none";
+      c.style.opacity = "0.5";
+    });
+    return;
+  }
 
   setTimeout(() => {
     estadoDiv.innerText = "Nueva ronda";
