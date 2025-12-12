@@ -17,8 +17,23 @@ if (!token) {
   spanUsuario.innerHTML = user_info.nickname;
 }
 
-btnCpu.addEventListener("click", () => {
-  window.location.href = "/juegoCPU.html";
+btnCpu.addEventListener("click", async () => {
+  const endpoint = "/partidas/crearCPU";
+  try {
+    const response = await fetch(
+      construirApi(endpoint),
+      crearHeader("POST", token)
+    );
+    if (!response.ok) {
+      console.log("Ayuda");
+    } else {
+      const nuevaPartida = await response.json();
+      sessionStorage.setItem("partida_id", nuevaPartida.id);
+      window.location.href = "/juego.html";
+    }
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 btnLogout.addEventListener("click", (e) => {

@@ -27,7 +27,7 @@ const crearPartida = async (req, res) => {
     const partidaActiva = await Partida.findOne({
       where: {
         [Op.or]: [{ id_jugador1 }, { id_jugador2: id_jugador1 }],
-        estado: { [Op.in]: [0] },
+        estado: 0,
       },
     });
 
@@ -49,7 +49,7 @@ const crearPartidaCPU = async (req, res) => {
   try {
     const id_jugador1 = req.user.id;
 
-    const botUser = await Usuario.findOne({ where: { rol_id: 3 } });
+    const botUser = await Usuario.findOne({ where: { id_rol: 3 } });
     if (!botUser)
       return res
         .status(500)
@@ -58,7 +58,7 @@ const crearPartidaCPU = async (req, res) => {
     const partidaActiva = await Partida.findOne({
       where: {
         [Op.or]: [{ id_jugador1 }, { id_jugador2: id_jugador1 }],
-        estado: { [Op.in]: [0, 1] },
+        estado: 0,
       },
     });
 
@@ -66,11 +66,10 @@ const crearPartidaCPU = async (req, res) => {
       return res.status(400).json({ error: "Ya tienes una partida en curso." });
     }
 
-    // 3. Crear la partida DIRECTAMENTE EN ESTADO 1 (Jugando)
     const nuevaPartida = await Partida.create({
       id_jugador1: id_jugador1,
-      id_jugador2: botUser.id, // El rival es el Bot
-      estado: 1, // ¡Empieza directa!
+      id_jugador2: botUser.id,
+      estado: 1,
       puntuacion_j1: 0,
       puntuacion_j2: 0,
     });
@@ -160,6 +159,11 @@ const jugarTurno = async (req, res) => {
     }
 
     await turno.save();
+    if (partida.jugador2.id_rol === 3) {
+      const opciones = ["piedra", "papel", "tijera"];
+      turno.mano_j2 = opciones[Math.floor(Math.random() * 3)];
+      await turno.save();
+    }
 
     const sala = `partida_${id_partida}`;
 
