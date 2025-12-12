@@ -106,17 +106,11 @@ const cargarPartidasExistentes = async () => {
     if (response.ok) {
       const partidas = await response.json();
       listaPartidas.innerHTML = "";
-      partidas.forEach((p) => pintarPartida(p));
+      const disponibles = partidas.filter((partida) => partida.estado === 0);
+      disponibles.forEach((p) => pintarPartida(p));
     }
   } catch (error) {
     console.error("Error cargando partidas:", error);
-  }
-};
-
-const actualizarPartidas = async () => {
-  try {
-  } catch (error) {
-    console.error(error);
   }
 };
 
