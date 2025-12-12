@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 import { crearHeader, construirApi } from "./helper/helper";
+const btnCpu = document.getElementById("btnJugarCpu");
 const btnLogout = document.getElementById("btnLogout");
 const btnCrearPartida = document.getElementById("btnCrearPartida");
 const listaPartidas = document.getElementById("listaPartidas");
@@ -15,6 +16,10 @@ if (!token) {
 } else {
   spanUsuario.innerHTML = user_info.nickname;
 }
+
+btnCpu.addEventListener("click", () => {
+  window.location.href = "/juegoCPU.html";
+});
 
 btnLogout.addEventListener("click", (e) => {
   e.preventDefault();

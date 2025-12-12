@@ -7,7 +7,7 @@ module.exports = {
       "usuarios",
       {
         where: {
-          nickname: "MARTABOT",
+          id_rol: 3,
         },
       },
       ["id"]
@@ -21,7 +21,7 @@ module.exports = {
             nickname: "MARTABOT",
             email: "bot@piedrapapeltijera.com",
             password: "bipbop",
-            id_rol: 2,
+            id_rol: 3, //quizas deberia poner rol 3 para dividir por bots?! voy con ello de hecho
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -35,7 +35,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    // Si queremos deshacer el seed, borramos al bot
-    await queryInterface.bulkDelete("usuarios", { nickname: "BOT" }, {});
+    await queryInterface.bulkDelete("usuarios", { id_rol: 3 }, {});
   },
 };

@@ -23,14 +23,62 @@ const getPartidaById = async (req, res) => {
 const crearPartida = async (req, res) => {
   try {
     const id_jugador1 = req.user.id;
-    const nuevaPartida = await Partida.create({
-      id_jugador1: id_jugador1,
-      estado: 0,
+    const partidaActiva = await Partida.findOne({
+      where: {
+        [Op.or]: [{ id_jugador1 }, { id_jugador2: id_jugador1 }],
+        estado: { [Op.in]: [0, 1] },
+      },
     });
+
+    if (partidaActiva) {
+      return res.status(400).json({ error: "Ya tienes una partida en curso." });
+    } else {
+      const nuevaPartida = await Partida.create({
+        id_jugador1: id_jugador1,
+        estado: 0,
+      });
+    }
 
     res.json(nuevaPartida);
   } catch (error) {
     res.json({ message: error.message });
+  }
+};
+
+const crearPartidaCPU = async (req, res) => {
+  try {
+    const id_jugador1 = req.user.id;
+
+    const botUser = await Usuario.findOne({ where: { rol_id: 3 } });
+    if (!botUser)
+      return res
+        .status(500)
+        .json({ error: "El sistema no tiene un BOT configurado." });
+
+    const partidaActiva = await Partida.findOne({
+      where: {
+        [Op.or]: [{ id_jugador1 }, { id_jugador2: id_jugador1 }],
+        estado: { [Op.in]: [0, 1] },
+      },
+    });
+
+    if (partidaActiva) {
+      return res.status(400).json({ error: "Ya tienes una partida en curso." });
+    }
+
+    // 3. Crear la partida DIRECTAMENTE EN ESTADO 1 (Jugando)
+    const nuevaPartida = await Partida.create({
+      id_jugador1: id_jugador1,
+      id_jugador2: botUser.id, // El rival es el Bot
+      estado: 1, // ¡Empieza directa!
+      puntuacion_j1: 0,
+      puntuacion_j2: 0,
+    });
+
+    res.json(nuevaPartida);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error al crear partida vs CPU" });
   }
 };
 
@@ -184,4 +232,5 @@ export {
   getAllPartidas,
   jugarTurno,
   getPartidaById,
+  crearPartidaCPU,
 };
