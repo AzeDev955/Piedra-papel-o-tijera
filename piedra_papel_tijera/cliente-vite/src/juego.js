@@ -12,6 +12,8 @@ if (!token) {
   window.location.href = "/login.html";
 }
 
+const labelJ1 = document.getElementById("labelJ1");
+const labelJ2 = document.getElementById("labelJ2");
 const titulo = document.getElementById("idPartida");
 const estadoDiv = document.getElementById("estadoJuego");
 const btnVolver = document.getElementById("btnVolver");
@@ -24,6 +26,7 @@ titulo.innerText = partida_id;
 socket.on("connect", () => {
   console.log("Conectado al servidor. Uniéndose a sala:", partida_id);
   socket.emit("unirse_partida", partida_id);
+  identificarJugadores();
 });
 
 socket.on("jugada_realizada", (data) => {
@@ -68,7 +71,6 @@ socket.on("turno_resuelto", (data) => {
   }, 3000);
 });
 
-// --- 4. LÓGICA DE JUGAR (FETCH) ---
 cartas.forEach((carta) => {
   carta.addEventListener("click", async () => {
     const mano = carta.dataset.mano;
@@ -86,15 +88,13 @@ cartas.forEach((carta) => {
       if (response.ok) {
         console.log("Jugada enviada:", datos);
         if (datos.message === "Turno resuelto") {
-          // No hacemos nada, dejamos que el socket pinte el resultado
           console.log("Esperando datos por socket...");
         } else {
-          // Si es "Jugada guardada. Esperando al rival...", sí lo mostramos
           estadoDiv.innerText = datos.message || "Esperando al rival...";
         }
       } else {
         estadoDiv.innerText = datos.error || "Error al jugar";
-        estadoDiv.style.background = "#c0392b"; // Rojo
+        estadoDiv.style.background = "#c0392b";
       }
     } catch (error) {
       console.error(error);
@@ -106,3 +106,29 @@ btnVolver.addEventListener(
   "click",
   () => (window.location.href = "lobby.html")
 );
+
+const identificarJugadores = async () => {
+  try {
+    const endpoint = `/partidas/${partida_id}`;
+    const response = await fetch(
+      construirApi(endpoint),
+      crearHeader("GET", token)
+    );
+
+    if (response.ok) {
+      const partida = await response.json();
+      if (partida.id_jugador1 == usuario.id) {
+        labelJ1.innerText = "J1 (Yo)";
+        labelJ1.style.color = "#f1c40f";
+      } else if (partida.id_jugador2 == usuario.id) {
+        labelJ2.innerText = "J2 (Yo)";
+        labelJ2.style.color = "#f1c40f";
+      }
+
+      puntosJ1.innerText = partida.puntuacion_j1 || 0;
+      puntosJ2.innerText = partida.puntuacion_j2 || 0;
+    }
+  } catch (error) {
+    console.error("Error identificando jugadores:", error);
+  }
+};

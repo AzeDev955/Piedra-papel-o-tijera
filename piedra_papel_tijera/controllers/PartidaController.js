@@ -1,6 +1,19 @@
 import Partida from "../models/Partida.js";
 import Turno from "../models/Turno.js";
 
+const getPartidaById = async (req, res) => {
+  try {
+    const { id_partida } = req.params;
+    const partida = await Partida.findByPk(id_partida);
+    if (!partida) {
+      return res.status(404).json({ error: "Partida no encontrada" });
+    }
+    res.json(partida);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const crearPartida = async (req, res) => {
   try {
     const id_jugador1 = req.user.id;
@@ -146,4 +159,10 @@ const jugarTurno = async (req, res) => {
   }
 };
 
-export { crearPartida, unirsePartida, getAllPartidas, jugarTurno };
+export {
+  crearPartida,
+  unirsePartida,
+  getAllPartidas,
+  jugarTurno,
+  getPartidaById,
+};
