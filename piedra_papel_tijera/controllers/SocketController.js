@@ -10,4 +10,8 @@ export const socketController = (socket, io) => {
   socket.on("disconnect", () => {
     console.log("❌ Cliente desconectado ID:", socket.id);
   });
+
+  socket.on("cliente:nueva_partida", (data) => {
+    io.emit("servidor:nueva_partida", data);
+  });
 };

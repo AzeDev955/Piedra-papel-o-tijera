@@ -130,8 +130,8 @@
           if (response.ok) {
             // ¡Login correcto!
             // 1. Guardamos el token en el navegador
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("usuario", JSON.stringify(data.usuario));
+            sessionStorage.setItem("token", data.token);
+            sessionStorage.setItem("usuario", JSON.stringify(data.usuario));
 
             // 2. Redirigimos al Lobby (vamos a crear este archivo luego)
             window.location.href = "lobby.html";

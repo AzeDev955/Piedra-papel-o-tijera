@@ -3,8 +3,8 @@ import { crearHeader, construirApi } from "./helper/helper";
 const btnLogout = document.getElementById("btnLogout");
 const btnCrearPartida = document.getElementById("btnCrearPartida");
 const listaPartidas = document.getElementById("listaPartidas");
-const token = localStorage.getItem("token");
-const user_info = JSON.parse(localStorage.getItem("usuario"));
+const token = sessionStorage.getItem("token");
+const user_info = JSON.parse(sessionStorage.getItem("usuario"));
 const spanUsuario = document.getElementById("nombreUsuario");
 
 const socket = io("http://localhost:8000");
@@ -18,7 +18,7 @@ if (!token) {
 
 btnLogout.addEventListener("click", (e) => {
   e.preventDefault();
-  localStorage.clear();
+  sessionStorage.clear();
   window.location.href = "./login.html";
 });
 
@@ -31,28 +31,36 @@ btnCrearPartida.addEventListener("click", async () => {
     );
     if (!response.ok) {
       console.log("Ayuda");
+    } else {
+      const nuevaPartida = await response.json();
+      socket.emit("cliente:nueva_partida", nuevaPartida);
     }
   } catch (error) {
     console.error(error);
   }
+});
 
-  const pintarPartida = (partida) => {
-    const div = document.createElement("div");
-    div.className = "game-card";
+socket.on("servidor:nueva_partida", (partida) => {
+  console.log("Nueva partida recibida por socket:", partida);
+  pintarPartida(partida);
+});
 
-    let estadoHtml = "";
-    let botonHtml = "";
+const pintarPartida = (partida) => {
+  const div = document.createElement("div");
+  div.className = "game-card";
 
-    if (partida.estado === 0) {
-      estadoHtml =
-        '<div class="status status-waiting">🟢 Esperando Rival</div>';
-      botonHtml = `<button class="btn-join" id="btn-join-${partida.id}">Unirse</button>`;
-    } else {
-      estadoHtml = '<div class="status status-playing">🔴 Jugando</div>';
-      botonHtml = '<button class="btn-full" disabled>Completa</button>';
-    }
+  let estadoHtml = "";
+  let botonHtml = "";
 
-    div.innerHTML = `
+  if (partida.estado === 0) {
+    estadoHtml = '<div class="status status-waiting">🟢 Esperando Rival</div>';
+    botonHtml = `<button class="btn-join" id="btn-join-${partida.id}">Unirse</button>`;
+  } else {
+    estadoHtml = '<div class="status status-playing">🔴 Jugando</div>';
+    botonHtml = '<button class="btn-full" disabled>Completa</button>';
+  }
+
+  div.innerHTML = `
       <div class="card-header">
           <span>Partida #${partida.id}</span>
       </div>
@@ -60,32 +68,42 @@ btnCrearPartida.addEventListener("click", async () => {
       ${botonHtml}
   `;
 
-    listaPartidas.appendChild(div);
+  listaPartidas.appendChild(div);
 
-    const btnJoin = document.getElementById(`btn-join-${partida.id}`);
-    if (btnJoin) {
-      btnJoin.addEventListener("click", () => {
-        console.log("Unirse a partida:", partida.id);
-        window.location.href = "/juego.html";
-      });
+  const btnJoin = document.getElementById(`btn-join-${partida.id}`);
+  if (btnJoin) {
+    btnJoin.addEventListener("click", () => {
+      console.log("Unirse a partida:", partida.id);
+      sessionStorage.setItem("partida_id", partida.id);
+      window.location.href = "/juego.html";
+    });
+  }
+};
+
+const cargarPartidasExistentes = async () => {
+  try {
+    const endpoint = "/partidas";
+    const response = await fetch(
+      construirApi(endpoint),
+      crearHeader("GET", token)
+    );
+
+    if (response.ok) {
+      const partidas = await response.json();
+      listaPartidas.innerHTML = "";
+      partidas.forEach((p) => pintarPartida(p));
     }
-  };
+  } catch (error) {
+    console.error("Error cargando partidas:", error);
+  }
+};
 
-  const cargarPartidasExistentes = async () => {
-    try {
-      const endpoint = "/partidas";
-      const response = await fetch(
-        construirApi(endpoint),
-        crearHeader("GET", token)
-      );
+const actualizarPartidas = async () => {
+  try {
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-      if (response.ok) {
-        const partidas = await response.json();
-        listaPartidas.innerHTML = "";
-        partidas.forEach((p) => pintarPartida(p));
-      }
-    } catch (error) {
-      console.error("Error cargando partidas:", error);
-    }
-  };
-});
+cargarPartidasExistentes();
+setInterval(cargarPartidasExistentes, 10000);

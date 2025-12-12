@@ -90,6 +90,9 @@ const jugarTurno = async (req, res) => {
     }
 
     await turno.save();
+
+    const sala = `partida_${id_partida}`;
+
     if (turno.mano_j1 && turno.mano_j2) {
       const m1 = turno.mano_j1;
       const m2 = turno.mano_j2;
@@ -113,11 +116,14 @@ const jugarTurno = async (req, res) => {
       await turno.save();
       await partida.save();
 
+      req.io.to(sala).emit("turno_resuelto", {
+        resultado: ganadorId ? `Ganó el jugador ${ganadorId}` : "Empate",
+        manos: { j1: m1, j2: m2 },
+        marcador: { j1: partida.puntuacion_j1, j2: partida.puntuacion_j2 },
+      });
+
       return res.json({
         message: "Turno resuelto",
-        resultado: ganadorId ? `Ganó el jugador ${ganadorId}` : "Empate",
-        jugada_rival: soyJugador1 ? turno.mano_j2 : turno.mano_j1,
-        marcador: { j1: partida.puntuacion_j1, j2: partida.puntuacion_j2 },
       });
     }
 
