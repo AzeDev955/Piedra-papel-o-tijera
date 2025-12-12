@@ -9,6 +9,9 @@ import usuarioRoutes from "./routes/usuarioRoutes.js";
 import partidaRoutes from "./routes/partidaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { socketController } from "./controllers/SocketController.js";
+
+import path from "path";
+import { fileURLToPath } from "url";
 dotenv.config();
 class MiServer {
   constructor() {
@@ -51,6 +54,11 @@ class MiServer {
     this.app.use(cors());
 
     this.app.use(express.json());
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    this.app.use(express.static(path.join(__dirname, "cliente")));
 
     this.app.use((req, res, next) => {
       req.io = this.io;
