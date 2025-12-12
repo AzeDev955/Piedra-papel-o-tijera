@@ -63,10 +63,8 @@ const jugarTurno = async (req, res) => {
       order: [["createdAt", "DESC"]], // Cogemos el último
     });
 
-    if (!turno || turno.ganador_turno !== null) {
-      if (!turno || (turno.mano_j1 && turno.mano_j2)) {
-        turno = await Turno.create({ id_partida });
-      }
+    if (!turno || (turno.mano_j1 && turno.mano_j2)) {
+      turno = await Turno.create({ id_partida });
     }
 
     let soyJugador1 = false;
