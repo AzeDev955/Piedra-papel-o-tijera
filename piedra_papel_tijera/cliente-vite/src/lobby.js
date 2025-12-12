@@ -92,7 +92,6 @@ const pintarPartida = (partida) => {
         } else {
           console.error("Error al unirse");
         }
-        window.location.href = "/juego.html";
       } catch (error) {
         console.error(error);
       }

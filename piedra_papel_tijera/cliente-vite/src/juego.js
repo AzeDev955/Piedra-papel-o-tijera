@@ -8,7 +8,7 @@ const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 //const params = new URLSearchParams(window.location.search); de la IA, yo voy a hacerlo de otra manera
 //const idPartida = params.get("id");
 const partida_id = sessionStorage.getItem("partida_id"); //Asi
-if (!token) {
+if (!token || !partida_id) {
   window.location.href = "/login.html";
 }
 

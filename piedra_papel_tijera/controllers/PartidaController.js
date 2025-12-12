@@ -1,6 +1,7 @@
 import Partida from "../models/Partida.js";
 import Turno from "../models/Turno.js";
 import Usuario from "../models/Usuario.js";
+import { Op } from "sequelize";
 
 const getPartidaById = async (req, res) => {
   try {
@@ -26,18 +27,17 @@ const crearPartida = async (req, res) => {
     const partidaActiva = await Partida.findOne({
       where: {
         [Op.or]: [{ id_jugador1 }, { id_jugador2: id_jugador1 }],
-        estado: { [Op.in]: [0, 1] },
+        estado: { [Op.in]: [0] },
       },
     });
 
     if (partidaActiva) {
       return res.status(400).json({ error: "Ya tienes una partida en curso." });
-    } else {
-      const nuevaPartida = await Partida.create({
-        id_jugador1: id_jugador1,
-        estado: 0,
-      });
     }
+    const nuevaPartida = await Partida.create({
+      id_jugador1: id_jugador1,
+      estado: 0,
+    });
 
     res.json(nuevaPartida);
   } catch (error) {
