@@ -121,7 +121,7 @@ const jugarTurno = async (req, res) => {
     const partida = await Partida.findByPk(id_partida, {
       include: [
         { model: Usuario, as: "jugador1", attributes: ["nickname"] }, //de nuevo para devolver los nicks
-        { model: Usuario, as: "jugador2", attributes: ["nickname"] },
+        { model: Usuario, as: "jugador2", attributes: ["nickname", "id_rol"] }, //ahora tambien ayuda para pillar el rol
       ],
     });
     if (!partida)
