@@ -60,7 +60,7 @@ const jugarTurno = async (req, res) => {
 
     let turno = await Turno.findOne({
       where: { id_partida },
-      order: [["createdAt", "DESC"]], // Cogemos el último
+      order: [["createdAt", "DESC"]],
     });
 
     if (!turno || (turno.mano_j1 && turno.mano_j2)) {

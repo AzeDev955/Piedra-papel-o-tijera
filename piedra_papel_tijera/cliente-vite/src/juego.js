@@ -85,7 +85,13 @@ cartas.forEach((carta) => {
 
       if (response.ok) {
         console.log("Jugada enviada:", datos);
-        estadoDiv.innerText = datos.message || "Esperando al rival...";
+        if (datos.message === "Turno resuelto") {
+          // No hacemos nada, dejamos que el socket pinte el resultado
+          console.log("Esperando datos por socket...");
+        } else {
+          // Si es "Jugada guardada. Esperando al rival...", sí lo mostramos
+          estadoDiv.innerText = datos.message || "Esperando al rival...";
+        }
       } else {
         estadoDiv.innerText = datos.error || "Error al jugar";
         estadoDiv.style.background = "#c0392b"; // Rojo
