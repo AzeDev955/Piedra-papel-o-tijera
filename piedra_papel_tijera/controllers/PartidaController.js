@@ -1,10 +1,16 @@
 import Partida from "../models/Partida.js";
 import Turno from "../models/Turno.js";
+import Usuario from "../models/Usuario.js";
 
 const getPartidaById = async (req, res) => {
   try {
     const { id_partida } = req.params;
-    const partida = await Partida.findByPk(id_partida);
+    const partida = await Partida.findByPk(id_partida, {
+      include: [
+        { model: Usuario, as: "jugador1", attributes: ["nickname"] }, //ayuda del 4to integrante, quiero los nicks para ponerlos en el juego
+        { model: Usuario, as: "jugador2", attributes: ["nickname"] },
+      ],
+    });
     if (!partida) {
       return res.status(404).json({ error: "Partida no encontrada" });
     }

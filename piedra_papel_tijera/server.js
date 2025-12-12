@@ -8,6 +8,7 @@ import db from "./database/db.js";
 import usuarioRoutes from "./routes/usuarioRoutes.js";
 import partidaRoutes from "./routes/partidaRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import "./models/asociaciones.js";
 import { socketController } from "./controllers/SocketController.js";
 
 import path from "path";

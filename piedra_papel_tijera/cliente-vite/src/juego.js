@@ -63,12 +63,12 @@ socket.on("turno_resuelto", (data) => {
       c.style.opacity = "0.5";
     });
     return;
+  } else {
+    setTimeout(() => {
+      estadoDiv.innerText = "Nueva ronda";
+      estadoDiv.style.background = "#34495e";
+    }, 5000);
   }
-
-  setTimeout(() => {
-    estadoDiv.innerText = "Nueva ronda";
-    estadoDiv.style.background = "#34495e";
-  }, 3000);
 });
 
 cartas.forEach((carta) => {
@@ -120,9 +120,11 @@ const identificarJugadores = async () => {
       if (partida.id_jugador1 == usuario.id) {
         labelJ1.innerText = `${usuario.nickname}`;
         labelJ1.style.color = "#f1c40f";
+        labelJ2.innerHTML = `${partida.jugador2.nickname}`;
       } else if (partida.id_jugador2 == usuario.id) {
         labelJ2.innerText = `${usuario.nickname}`;
         labelJ2.style.color = "#f1c40f";
+        labelJ1.innerHTML = `${partida.jugador1.nickname}`;
       }
 
       puntosJ1.innerText = partida.puntuacion_j1 || 0;
