@@ -20,6 +20,7 @@ const btnVolver = document.getElementById("btnVolver");
 const puntosJ1 = document.getElementById("puntosJ1");
 const puntosJ2 = document.getElementById("puntosJ2");
 const cartas = document.querySelectorAll(".carta");
+let temporizadorRonda = null;
 
 titulo.innerText = partida_id;
 
@@ -46,6 +47,9 @@ socket.on("jugada_realizada", (data) => {
 
 socket.on("turno_resuelto", (data) => {
   console.log("Evento recibido: turno_resuelto", data);
+  if (temporizadorRonda) {
+    clearTimeout(temporizadorRonda);
+  }
 
   const { resultado, marcador, manos, partidaTerminada, ganadorPartida } = data;
 
@@ -68,7 +72,7 @@ socket.on("turno_resuelto", (data) => {
     });
     return;
   } else {
-    setTimeout(() => {
+    temporizadorRonda = setTimeout(() => {
       estadoDiv.innerText = "Nueva ronda";
       estadoDiv.style.background = "#34495e";
     }, 3000);
