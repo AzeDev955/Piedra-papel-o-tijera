@@ -118,10 +118,10 @@ const identificarJugadores = async () => {
     if (response.ok) {
       const partida = await response.json();
       if (partida.id_jugador1 == usuario.id) {
-        labelJ1.innerText = "J1 (Yo)";
+        labelJ1.innerText = `${usuario.nickname}`;
         labelJ1.style.color = "#f1c40f";
       } else if (partida.id_jugador2 == usuario.id) {
-        labelJ2.innerText = "J2 (Yo)";
+        labelJ2.innerText = `${usuario.nickname}`;
         labelJ2.style.color = "#f1c40f";
       }
 
