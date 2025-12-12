@@ -5,6 +5,7 @@ export const socketController = (socket, io) => {
     const sala = `partida_${id_partida}`;
     socket.join(sala);
     console.log(`Socket ${socket.id} se unió a la sala: ${sala}`);
+    io.to(sala).emit("usuario_unido");
   });
 
   socket.on("disconnect", () => {

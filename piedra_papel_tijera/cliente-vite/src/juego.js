@@ -29,6 +29,10 @@ socket.on("connect", () => {
   identificarJugadores();
 });
 
+socket.on("usuario_unido", () => {
+  identificarJugadores();
+});
+
 socket.on("jugada_realizada", (data) => {
   console.log("Evento recibido: jugada_realizada", data);
 
@@ -67,7 +71,7 @@ socket.on("turno_resuelto", (data) => {
     setTimeout(() => {
       estadoDiv.innerText = "Nueva ronda";
       estadoDiv.style.background = "#34495e";
-    }, 5000);
+    }, 3000);
   }
 });
 

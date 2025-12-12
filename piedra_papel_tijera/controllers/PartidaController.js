@@ -71,7 +71,12 @@ const jugarTurno = async (req, res) => {
   const { mano } = req.body;
   const id_usuario = req.user.id;
   try {
-    const partida = await Partida.findByPk(id_partida);
+    const partida = await Partida.findByPk(id_partida, {
+      include: [
+        { model: Usuario, as: "jugador1", attributes: ["nickname"] }, //de nuevo para devolver los nicks
+        { model: Usuario, as: "jugador2", attributes: ["nickname"] },
+      ],
+    });
     if (!partida)
       return res.status(404).json({ error: "Partida no encontrada" });
     if (partida.estado !== 1)
@@ -145,12 +150,20 @@ const jugarTurno = async (req, res) => {
       await turno.save();
       await partida.save();
 
+      let nickGanadorPartida = null;
+      if (partidaTerminada && ganadorPartida) {
+        nickGanadorPartida =
+          ganadorPartida === partida.id_jugador1
+            ? partida.jugador1.nickname
+            : partida.jugador2.nickname;
+      }
+
       req.io.to(sala).emit("turno_resuelto", {
         resultado: ganadorId ? `Ganó el jugador ${ganadorId}` : "Empate",
         manos: { j1: m1, j2: m2 },
         marcador: { j1: partida.puntuacion_j1, j2: partida.puntuacion_j2 },
         partidaTerminada: partidaTerminada,
-        ganadorPartida: ganadorPartida,
+        ganadorPartida: nickGanadorPartida,
       });
 
       return res.json({
