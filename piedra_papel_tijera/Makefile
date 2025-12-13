@@ -1,5 +1,16 @@
 # Makefile para Piedra Papel Tijera
 
+# Detectar el sistema operativo
+ifeq ($(OS),Windows_NT)
+    # Comandos para Windows
+    CP_CMD = copy
+    RM_CMD = del
+else
+    # Comandos para Linux / Mac
+    CP_CMD = cp
+    RM_CMD = rm -f
+endif
+
 # Variables de directorios
 FRONT_DIR = cliente-vite
 
@@ -8,7 +19,7 @@ FRONT_DIR = cliente-vite
 # 0. CONFIGURACIÓN: Copiar .env
 env:
 	@echo "📄 Creando archivo .env desde el ejemplo..."
-	cp .env.example .env
+	$(CP_CMD) .env.example .env
 
 # 1. INSTALACIÓN
 install:
