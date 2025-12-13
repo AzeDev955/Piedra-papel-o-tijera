@@ -57,4 +57,4 @@ dev:
 
 # 7. INIT (Todo en uno)
 # Primero creamos el .env, luego instalamos y luego configuramos la BD
-init: env install db
+init: env install db dev
